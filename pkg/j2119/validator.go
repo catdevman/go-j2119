@@ -1,25 +1,19 @@
 package j2119
 
 import (
-	"bufio"
-	"os"
-  "fmt"
-	"github.com/catdevman/go-j2119/internal"
+  "os"
+	"github.com/catdevman/go-j2119/internal/parser"
 )
 
 type Validator struct{
-  parser internal.Parser
+  Parsed string
+  Root string
+  parser parser.Parser
 }
 
 func (v *Validator) Init(schema *os.File){
   defer schema.Close()
-  scanner := bufio.NewScanner(schema)
-  for scanner.Scan() {
-    fmt.Println(scanner.Text())
-  }
-  if err := scanner.Err(); err != nil {
-    fmt.Println(err)
-  }
+  v.parser.New(schema)
 }
 
 func (v *Validator) Validate(source *os.File) []string{
