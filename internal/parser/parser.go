@@ -35,7 +35,8 @@ func (p *Parser) New(f *os.File){
       } else {
         p.root = ROOT.FindString(line)
         p.matcher.New(p.root)
-        p.assigner.New()//p.constraints, p.finder, p.matcher, p.allowedFields)
+        p.constraints.New()
+        p.assigner.New(p.constraints, p.finder, p.matcher, p.allowedFields)
         p.haveRoot = true
       }
     } else {
@@ -52,6 +53,7 @@ func (p *Parser) New(f *os.File){
 }
 
 func (p *Parser) processLine(line string){
-  fmt.Println(line)
+  p.matcher.IsConstraintLine(p.matcher.BuildConstraint(line))
+//  fmt.Println(line)
 }
 
