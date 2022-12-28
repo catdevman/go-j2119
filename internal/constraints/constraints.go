@@ -32,5 +32,33 @@ func (o *OnlyOneOfConstraint) Check(node map[string]interface{}, path string, pr
   } 
 }
 
+type NonEmptyConstraint struct{
+  Constraint
+  name string
+}
+
+func (n *NonEmptyConstraint) New(name string){
+  n.name = name
+}
+
+func (n *NonEmptyConstraint) String() string{
+  conds := ""
+  if len(n.Constraint.Conditions) > 0{
+    conds = fmt.Sprintf(" %s conditions", len(n.Constraint.Conditions))
+  }
+
+  return fmt.Sprintf("<Array field %s should not be empty%s>", n.name, conds)
+}
+
+func (n *NonEmptyConstraint) Check(node map[string]interface{}, path string, problems []string){
+  n, ok := node[n.name]
+  if ok {
+    v, ok := n.([]interface{})
+    if ok && len(v) == 0 {
+      problems = append(problems, fmt.Sprintf("%s.%s is empty, non-empty required", path, n.name))
+    }
+  }
+}
+
 
 
