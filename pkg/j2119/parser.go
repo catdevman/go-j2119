@@ -1,27 +1,21 @@
-package parser
+package j2119
 
 import (
   "fmt"
   "os"
   "bufio"
   "regexp"
-  "github.com/catdevman/go-j2119/internal/assigner"
-  "github.com/catdevman/go-j2119/internal/matcher"
-  "github.com/catdevman/go-j2119/internal/roleconstraints"
-  "github.com/catdevman/go-j2119/internal/rolefinder"
-  "github.com/catdevman/go-j2119/internal/allowedfields"
 )
-
 
 type Parser struct{
   root string
   haveRoot bool
   failed bool
-  assigner assigner.Assigner
-  matcher matcher.Matcher
-  constraints roleconstraints.RoleConstraints
-  finder rolefinder.RoleFinder
-  allowedFields allowedfields.AllowedFields
+  assigner Assigner
+  matcher Matcher
+  constraints RoleConstraints
+  finder RoleFinder
+  allowedFields AllowedFields
 }
 
 func (p *Parser) New(f *os.File){
@@ -53,7 +47,7 @@ func (p *Parser) New(f *os.File){
 }
 
 func (p *Parser) processLine(line string){
-  p.matcher.IsConstraintLine(p.matcher.BuildConstraint(line))
+//  p.matcher.IsConstraintLine(p.BuildConstraint(line))
 //  fmt.Println(line)
 }
 

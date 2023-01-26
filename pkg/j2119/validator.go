@@ -2,13 +2,12 @@ package j2119
 
 import (
   "os"
-	"github.com/catdevman/go-j2119/internal/parser"
 )
 
 type Validator struct{
   Parsed string
   Root string
-  parser parser.Parser
+  parser Parser
 }
 
 func (v *Validator) Init(schema *os.File){

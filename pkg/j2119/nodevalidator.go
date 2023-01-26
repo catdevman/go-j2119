@@ -1,22 +1,18 @@
-package nodevalidator
-
-import "github.com/catdevman/go-j2119/internal/parser"
-
-
+package j2119 
 
 type NodeValidator struct{
-  parser parser.Parser
+  parser Parser
 }
 
-func (nv *NodeValidator) Initialize(p parser.Parser){
+func (nv *NodeValidator) Initialize(p Parser){
   nv.parser = p
 }
 
 func (nv *NodeValidator) ValidateNode(node map[string]interface{}, path string, roles []string, problems []string){
-  nv.parser.FindMoreRoles(node, roles)
+//  nv.FindMoreRoles(node, roles)
 
  // for _, role := range roles{
- //   constraints := nv.parser.GetConstraints(role)
+ //   constraints := nv.GetConstraints(role)
  //   for _, constraint := range constraints{
 
  //   }

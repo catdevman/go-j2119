@@ -1,4 +1,4 @@
-package allowedfields
+package j2119
 
 type AllowedFields struct{
   allowed map[string][]string
@@ -7,6 +7,7 @@ type AllowedFields struct{
 
 func (af *AllowedFields) SetAllowed(role, child string){
   if _, ok := af.allowed[role]; !ok {
+    af.allowed = make(map[string][]string)
     af.allowed[role] = []string{}
   }
   af.allowed[role] = append(af.allowed[role], child)

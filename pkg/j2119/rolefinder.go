@@ -1,4 +1,4 @@
-package rolefinder
+package j2119
 
 type RoleFinder struct {
   fieldValueRoles []string //Not sure on this

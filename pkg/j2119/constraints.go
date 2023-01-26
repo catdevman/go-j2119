@@ -1,12 +1,11 @@
-package constraints
+package j2119 
 
 import (
   "fmt"
   "strings"
-  "github.com/catdevman/go-j2119/internal/conditional"
 )
 type Constraint struct{
-  Conditions []conditional.RoleNotPresentCondition
+  Conditions []RoleNotPresentCondition
 }
 
 type OnlyOneOfConstraint struct{
@@ -44,20 +43,20 @@ func (n *NonEmptyConstraint) New(name string){
 func (n *NonEmptyConstraint) String() string{
   conds := ""
   if len(n.Constraint.Conditions) > 0{
-    conds = fmt.Sprintf(" %s conditions", len(n.Constraint.Conditions))
+    conds = fmt.Sprintf(" %d conditions", len(n.Constraint.Conditions))
   }
 
   return fmt.Sprintf("<Array field %s should not be empty%s>", n.name, conds)
 }
 
 func (n *NonEmptyConstraint) Check(node map[string]interface{}, path string, problems []string){
-  n, ok := node[n.name]
-  if ok {
-    v, ok := n.([]interface{})
-    if ok && len(v) == 0 {
-      problems = append(problems, fmt.Sprintf("%s.%s is empty, non-empty required", path, n.name))
-    }
-  }
+//  n, ok := node[n.name]
+//  if ok {
+//    v, ok := n.([]interface{})
+//    if ok && len(v) == 0 {
+//      problems = append(problems, fmt.Sprintf("%s.%s is empty, non-empty required", path, n.name))
+//    }
+//  }
 }
 
 
