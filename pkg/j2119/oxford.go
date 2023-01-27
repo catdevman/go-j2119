@@ -55,22 +55,16 @@ func (o *Oxford) BreakStringList(list string) []string{
 }
 
 func (o *Oxford) BreakRoleList(matcher string, list string) []string {
-    pieces := make([]string, 0)
-    re := regexp.MustCompile(`^an?\s+` + matcher + `(,\s+)?`)
-    fmt.Println(re.FindAllString(list, -1))
-//    for {
-//        match := re.FindString(list)
-//        fmt.Println(match)
-//        if match == nil {
-//            break
-//        }
-//        pieces = append(pieces, match[1])
-//        list = list[len(match[0]):]
-//    }
-    re2 := regexp.MustCompile(`^\s*(and|or)\s+an?\s+`+matcher)
-    if matches := re2.FindAllString(list, -1); len(matches) >= 3  {
-        pieces = append(pieces, matches[2])
-    }
-  
-    return pieces
+  	pieces := []string{}
+	re := regexp.MustCompile(fmt.Sprintf(`^an?\s+(%s)(,\s+)?`, matcher))
+	for re.MatchString(list) {
+		submatches := re.FindStringSubmatch(list)
+		pieces = append(pieces, submatches[1])
+		list = strings.TrimPrefix(list, submatches[0])
+	}
+	if re := regexp.MustCompile(fmt.Sprintf(`^\s*(and|or)\s+an?\s+(%s)`, matcher)); re.MatchString(list) {
+		submatches := re.FindStringSubmatch(list)
+		pieces = append(pieces, submatches[2])
+	}
+	return pieces
 }

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
  const MUST = "(?P<modal>MUST|MAY|MUST NOT)"
-const S = `"[^"]*`
+const S = `"[^"]*"`
 const V = `\S+`
 const CHILD_ROLE = `;\s+((its\s+(?P<child_type>value))|` +
                  `each\s+(?P<child_type>field|element))` +
@@ -70,7 +70,7 @@ func (m *Matcher) reconstruct(){
   fieldList := `one\s+of\s+` + ox.Re(`"[^"]+"`, Options{
     CaptureName: "field_list",
   })
-  cMatch := fmt.Sprintf(`%s((?P<type>%s)\s+)?field\s+named\s+((\"(?P<field_name>[^\"]+)\")|(%s))(\s+whose\s+value\s+MUST\s+be\s+%s)?(%s)?\.`, cStart, m.typeRegex,fieldList, m.predicate, CHILD_ROLE)
+  cMatch := fmt.Sprintf(`%s((?P<type>%s)\s+)?field\s+named\s+(("(?P<field_name>[^"]+)")|(%s))(\s+whose\s+value\s+MUST\s+be\s+%s)?(%s)?\.`, cStart, m.typeRegex,fieldList, m.predicate, CHILD_ROLE)
   ooStart := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+%s\s+have\s+only\s+`, m.roleMatcher, MUST)
   ooFieldList := fmt.Sprintf(`one\s+of\s+%s`, ox.Re(`"[^"]+"`, Options{
     CaptureName: "field_list",
@@ -79,9 +79,9 @@ func (m *Matcher) reconstruct(){
 
   ooMatch := ooStart + ooFieldList
 
-  valMatch := `whose\s+\"(?P<fieldtomatch>[^\"]+)\"\s+field\'s\s+value\s+is\s+(?P<valtomatch>(\"[^\"]*\")|([^\"\s]\s+))`
-  withAMatch := `with\s+an?\s+\"(?P<with_a_field>[^\"]+)\"\s+field\s`
-  rdMatch := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+((?P<val_match_present>%s)|(%s))?is\s+an?\s+\"(?P<newrole>[^\"]*)\"\\.\s*$`, m.roleMatcher, valMatch, withAMatch)
+  valMatch := `whose\s+"(?P<fieldtomatch>[^"]+)"\s+field's\s+value\s+is\s+(?P<valtomatch>("[^"]*")|([^"\s]\S+))\s+`
+  withAMatch := `with\s+an?\s+"(?P<with_a_field>[^"]+)"\s+field\s`
+  rdMatch := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+((?P<val_match_present>%s)|(%s))?is\s+an?\s+"(?P<newrole>[^"]*)"\.\s*$`, m.roleMatcher, valMatch, withAMatch)
   
   m.roleDefMatch = regexp.MustCompile(rdMatch)
   
