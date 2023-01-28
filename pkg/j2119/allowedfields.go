@@ -1,25 +1,25 @@
 package j2119
 
-type AllowedFields struct{
-  allowed map[string][]string
-  any []string
+type AllowedFields struct {
+	allowed map[string][]string
+	any     []string
 }
 
-func (af *AllowedFields) SetAllowed(role, child string){
-  if _, ok := af.allowed[role]; !ok {
-    af.allowed = make(map[string][]string)
-    af.allowed[role] = []string{}
-  }
-  af.allowed[role] = append(af.allowed[role], child)
+func (af *AllowedFields) SetAllowed(role, child string) {
+	if _, ok := af.allowed[role]; !ok {
+		af.allowed = make(map[string][]string)
+		af.allowed[role] = []string{}
+	}
+	af.allowed[role] = append(af.allowed[role], child)
 }
 
-func (af *AllowedFields) SetAny(role string){
-  af.any = append(af.any, role)
+func (af *AllowedFields) SetAny(role string) {
+	af.any = append(af.any, role)
 }
 
-func(af *AllowedFields) Allowed(roles []string, child string) bool{
+func (af *AllowedFields) Allowed(roles []string, child string) bool {
 	for _, role := range roles {
-    if _, ok := af.allowed[role]; ok && contains(af.allowed[role], child) {
+		if _, ok := af.allowed[role]; ok && contains(af.allowed[role], child) {
 			return true
 		}
 	}
