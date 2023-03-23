@@ -363,4 +363,12 @@ func TestMatchAnEnumConstraintObject(t *testing.T) {
 	if v, ok := con["relation"]; !ok || v != "" {
 		t.Fatal("relation is not set correctly")
 	}
+
+  if v, ok := con["strings"]; !ok || v != `"Pass", "Succeed", "Fail", "Task", "Choice", "Wait", or "Parallel"`{
+    t.Fatal("strings not set correctly")
+  }
+
+  if v, ok := con["child_type"]; !ok || v != ""{
+    t.Fatal("child_type not set correctly")
+  }
 }
