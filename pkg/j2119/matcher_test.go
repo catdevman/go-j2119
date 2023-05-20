@@ -372,3 +372,94 @@ func TestMatchAnEnumConstraintObject(t *testing.T) {
     t.Fatal("child_type not set correctly")
   }
 }
+
+func TestTokenizeStringListsProperly(t *testing.T) {
+    cut := Matcher{}
+    cut.New("x")
+    val := cut.TokenizeStrings(`"a"`)
+    if len(val) != 1 || val[0] != "a" {
+        t.Fatal("Matcher should tokenize string to slice")
+    }
+    val = cut.TokenizeStrings(`"a" or "b"`)
+    if len(val) != 2 || val[0] != "a" || val[1] != "b" {
+        t.Fatal("Matcher should tokenize string to slice")
+    }
+    val = cut.TokenizeStrings(`"a", "b", or "c"`)
+    if len(val) != 3 || val[0] != "a" || val[1] != "b" || val[2] != "c" {
+        t.Fatal("Matcher should tokenize string to slice")
+    }
+}
+
+func TestConstraintObject(t *testing.T) {
+    cut := Matcher{}
+    cut.New("Retrier")
+    str := `A Retrier MAY have a nonnegative-integer field named "MaxAttempts" whose value MUST be less than 99999999.`
+    con := cut.BuildConstraint(str)
+    if v, ok:= con["role"]; !ok || v != "Retrier" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["modal"]; !ok || v != "MAY" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["type"]; !ok || v != "nonnegative-integer" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["field_name"]; !ok || v != "MaxAttempts" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["strings"]; !ok || v != "" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["relation"]; !ok || v != "less than" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["target"]; !ok || v != "99999999" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["child_type"]; !ok || v != "" {
+        t.Fatal("constraint was not build correctly")
+    }
+
+}
+func TestConstraintObjectWithChildType(t *testing.T) {
+    cut := Matcher{}
+    cut.New("State Machine")
+    str := `A State Machine MUST have an object field named "States"; each field is a "State".`
+    con := cut.BuildConstraint(str)
+    if v, ok:= con["role"]; !ok || v != "State Machine" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["modal"]; !ok || v != "MUST" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["type"]; !ok || v != "object" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["field_name"]; !ok || v != "States" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["child_type"]; !ok || v != "field" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["child_role"]; !ok || v != "State" {
+        t.Fatal("constraint was not build correctly")
+    }
+
+    str = `A State Machine MAY have an object field named "Not"; its value is a "FOO".`
+    if !cut.constraintMatch.Match([]byte(str)){
+        t.Fatal("constraintMatch was not correct")
+    }
+    con = cut.BuildConstraint(str)
+    if v, ok:= con["role"]; !ok || v != "State Machine" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["modal"]; !ok || v != "MAY" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["field_name"]; !ok || v != "Not" {
+        t.Fatal("constraint was not build correctly")
+    }
+    if v, ok:= con["child_role"]; !ok || v != "FOO" {
+        t.Fatal("constraint was not build correctly")
+    }
+}

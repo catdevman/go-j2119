@@ -167,6 +167,43 @@ func (m *Matcher) IsRoleDefLine(line string) bool {
 	return re.MatchString(line)
 }
 
+func (m *Matcher) TokenizeStrings(s string) []string {
+    	r := regexp.MustCompile(`"(.*?)"`)
+	matches := r.FindAllStringSubmatch(s, -1)
+	
+	var results []string
+	for _, match := range matches {
+		results = append(results, match[1])
+	}
+	
+	return results
+}
+
+
+
+func (m *Matcher) BuildConstraint(line string) map[string]string {
+    return Build(m.constraintMatch, line)
+}
+
+func Build(re *regexp.Regexp, line string) map[string]string {
+	data := make(map[string]string)
+	match := re.FindStringSubmatch(line)
+
+	if match == nil {
+		fmt.Printf("No names for: %s\n", line)
+		return data
+	}
+
+	names := re.SubexpNames()
+	for i, name := range names {
+		if i != 0 && name != "" {
+			data[name] = match[i]
+		}
+	}
+
+	return data
+}
+
 func reSubMatchMap(r *regexp.Regexp, str string) map[string]string {
 	match := r.FindStringSubmatch(str)
 	subMatchMap := make(map[string]string)
