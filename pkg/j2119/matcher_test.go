@@ -1,3 +1,4 @@
+// matcher tests are complete
 package j2119
 
 import (
@@ -8,8 +9,7 @@ import (
 )
 
 func TestShouldFindEachOfLines(t *testing.T) {
-	cut := Matcher{}
-	cut.New("message")
+	cut := NewMatcher("message")
 	for _, r := range []string{"Pass State", "Task State", "Choice State", "Parallel State", "Succeed State", "Fail State", "Task State"} {
 		cut.AddRole(r)
 	}
@@ -29,8 +29,7 @@ func TestShouldFindEachOfLines(t *testing.T) {
 
 func TestShouldHandleOnlyOneOfLines(t *testing.T) {
 	line := `A x MUST have only one of "Seconds", "SecondsPath", "Timestamp", and "TimestampPath"`
-	cut := Matcher{}
-	cut.New("x")
+	cut := NewMatcher("x")
 	if !cut.IsOnlyOneMatchLine(line) {
 		t.Fail()
 	}
@@ -85,8 +84,7 @@ func TestShouldDisassembleEachofLines(t *testing.T) {
 
 	oxford := Oxford{}
 
-	cut := Matcher{}
-	cut.New("message")
+	cut := NewMatcher("message")
 
 	for _, r := range []string{"Pass State", "Task State", "Choice State", "Parallel State", "Succeed State", "Fail State", "Task State"} {
 		cut.AddRole(r)
@@ -94,7 +92,7 @@ func TestShouldDisassembleEachofLines(t *testing.T) {
 
 	for idx, line := range eachOfLines {
 		wanted := splitEachofLines[idx]
-		for _, oneLine := range oxford.BreakRoleList(cut.roleMatcher, line) {
+		for _, oneLine := range oxford.BreakRoleList(cut, line) {
 			if !slices.Contains(wanted, oneLine) {
 				t.Fail()
 			}
@@ -109,8 +107,7 @@ func TestSpotRoleDefLines(t *testing.T) {
 		"A Choice Rule with a \"Variable\" field is a \"Comparison\".",
 	}
 
-	cut := Matcher{}
-	cut.New("message")
+	cut := NewMatcher("message")
 
 	for _, rdline := range rdlines {
 		if !cut.IsRoleDefLine(rdline) {
@@ -126,8 +123,7 @@ func TestMatchValueBasedRoleDefs(t *testing.T) {
 		"A State with a \"Foo\" field is a \"Bar\".",
 	}
 
-	cut := Matcher{}
-	cut.New("State")
+	cut := NewMatcher("State")
 
 	for _, v := range valueBasedRoleDefs {
 		if !cut.roleDefMatch.MatchString(v) {
@@ -193,8 +189,7 @@ func TestMatchValueBasedRoleDefs(t *testing.T) {
 }
 
 func TestMatchIsARoleDefs(t *testing.T) {
-	cut := Matcher{}
-	cut.New("Foo")
+	cut := NewMatcher("Foo")
 
 	if !cut.roleDefMatch.MatchString(`A Foo is a "Bar".`) {
 		t.Fatal("roleDefMatch did not correctly match")
@@ -202,8 +197,7 @@ func TestMatchIsARoleDefs(t *testing.T) {
 }
 
 func TestParseIsARoleDefs(t *testing.T) {
-	cut := Matcher{}
-	cut.New("Foo")
+	cut := NewMatcher("Foo")
 	cut.AddRole("Bar")
 
 	m1 := reSubMatchMap(cut.roleDefMatch, `A Foo is a "Bar".`)
@@ -213,8 +207,7 @@ func TestParseIsARoleDefs(t *testing.T) {
 }
 
 func TestParseValueBasedRoleDefs(t *testing.T) {
-	cut := Matcher{}
-	cut.New("State")
+	cut := NewMatcher("State")
 
 	valueBasedRoleDefs := []string{
 		"A State whose \"End\" field's value is true is a \"Terminal State\".",
@@ -265,9 +258,8 @@ var lines []string = []string{
 	`A message MUST have a field named one of "StringEquals", "StringLessThan", "StringGreaterThan", "StringLessThanEquals", "StringGreaterThanEquals", "NumericEquals", "NumericLessThan", "NumericGreaterThan", "NumericLessThanEquals", "NumericGreaterThanEquals", "BooleanEquals", "TimestampEquals", "TimestampLessThan", "TimestampGreaterThan", "TimestampLessThanEquals", or "TimestampGreaterThanEquals"`,
 }
 
-func TestSpotASimpleConstraintLine(t *testing.T) {
-	cut := Matcher{}
-	cut.New("message")
+func TestFindASimpleConstraintLine(t *testing.T) {
+	cut := NewMatcher("message")
 	for _, line := range lines {
 		if !cut.IsConstraintLine(line) {
 			t.Fatal("Did not recognize constraint line")
@@ -275,9 +267,8 @@ func TestSpotASimpleConstraintLine(t *testing.T) {
 	}
 }
 
-func TestSpotASimpleConstraintLineWithNewRoles(t *testing.T) {
-	cut := Matcher{}
-	cut.New("message")
+func TestFindASimpleConstraintLineWithNewMatcherRoles(t *testing.T) {
+	cut := NewMatcher("message")
 	lines2 := []string{}
 	for _, line := range lines {
 		lines2 = append(lines2, strings.ReplaceAll(line, "message", "avatar"))
@@ -304,8 +295,7 @@ func TestCatchAConditionalOnAConstraint(t *testing.T) {
 		"an R2 or an R3",
 		"an R2, an R3, or an R4",
 	}
-	cut := Matcher{}
-	cut.New("R1")
+	cut := NewMatcher("R1")
 	cut.AddRole("R2")
 	cut.AddRole("R3")
 	cut.AddRole("R4")
@@ -323,8 +313,7 @@ func TestCatchAConditionalOnAConstraint(t *testing.T) {
 }
 
 func TestMatchAReasonablyComplexConstraint(t *testing.T) {
-	cut := Matcher{}
-	cut.New("State")
+	cut := NewMatcher("State")
 	s := `A State MUST have a string field named "Type" whose value MUST be one of "Pass", "Succeed", "Fail", "Task", "Choice", "Wait", or "Parallel".`
 	if !cut.constraintMatch.MatchString(s) {
 		t.Fatal("failed to match string on complex constraint")
@@ -339,8 +328,7 @@ func TestMatchAReasonablyComplexConstraint(t *testing.T) {
 }
 
 func TestMatchAnEnumConstraintObject(t *testing.T) {
-	cut := Matcher{}
-	cut.New("State")
+	cut := NewMatcher("State")
 	s := `A State MUST have a string field named "Type" whose value MUST be one of "Pass", "Succeed", "Fail", "Task", "Choice", "Wait", or "Parallel".`
 	con := reSubMatchMap(cut.constraintMatch, s)
 	if v, ok := con["role"]; !ok {
@@ -374,8 +362,7 @@ func TestMatchAnEnumConstraintObject(t *testing.T) {
 }
 
 func TestTokenizeStringListsProperly(t *testing.T) {
-    cut := Matcher{}
-    cut.New("x")
+    cut := NewMatcher("x")
     val := cut.TokenizeStrings(`"a"`)
     if len(val) != 1 || val[0] != "a" {
         t.Fatal("Matcher should tokenize string to slice")
@@ -391,8 +378,7 @@ func TestTokenizeStringListsProperly(t *testing.T) {
 }
 
 func TestConstraintObject(t *testing.T) {
-    cut := Matcher{}
-    cut.New("Retrier")
+    cut := NewMatcher("Retrier")
     str := `A Retrier MAY have a nonnegative-integer field named "MaxAttempts" whose value MUST be less than 99999999.`
     con := cut.BuildConstraint(str)
     if v, ok:= con["role"]; !ok || v != "Retrier" {
@@ -422,8 +408,7 @@ func TestConstraintObject(t *testing.T) {
 
 }
 func TestConstraintObjectWithChildType(t *testing.T) {
-    cut := Matcher{}
-    cut.New("State Machine")
+    cut := NewMatcher("State Machine")
     str := `A State Machine MUST have an object field named "States"; each field is a "State".`
     con := cut.BuildConstraint(str)
     if v, ok:= con["role"]; !ok || v != "State Machine" {

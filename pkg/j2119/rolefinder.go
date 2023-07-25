@@ -1,3 +1,4 @@
+// barely started, had quite a few questions of the structure of the data for RoleFinder
 package j2119
 
 type RoleFinder struct {
@@ -6,6 +7,10 @@ type RoleFinder struct {
 	grandchildRoles    []string
 	fieldPresenceRoles map[string]map[string]string // This inter type might need to be it's own type of a role
 	isARoles           map[string][]string
+}
+
+func NewRoleFinder() RoleFinder{
+    return RoleFinder{}
 }
 
 func (f *RoleFinder) AddIsARole(role, otherRole string) {

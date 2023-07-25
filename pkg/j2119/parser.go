@@ -28,9 +28,9 @@ func (p *Parser) New(f *os.File) {
 				panic("Only one root declaration is allowed") //TODO: return errors??
 			} else {
 				p.root = ROOT.FindString(line)
-				p.matcher.New(p.root)
-				p.constraints.New()
-				p.assigner.New(p.constraints, p.finder, p.matcher, p.allowedFields)
+				p.matcher = NewMatcher(p.root)
+                p.constraints = NewRoleConstraints()
+                p.assigner = NewAssigner(p.constraints, p.finder, p.matcher, p.allowedFields)
 				p.haveRoot = true
 			}
 		} else {

@@ -1,34 +1,38 @@
 package j2119
 
 import (
-//	"fmt"
+    "fmt"
+    "log"
 	"testing"
 )
 
 func TestShouldAttachAConditionToAConstraint(t *testing.T) {
-//    assertion := map[string]string{
-//        "role":       "R",
-//        "modal":      "MUST",
-//        "field_name": "foo",
-//        "exclude":    "an A, a B, or a C",
-//    }
-//	rc := RoleConstraints{}
-//	rf := RoleFinder{}
-//	matcher := Matcher{}
-//	matcher.New("x")
-//	af := AllowedFields{}
-//
-//	cut := Assigner{
-//		constraints:   rc,
-//		roles:         rf,
-//		matcher:       matcher,
-//		allowedFields: af,
-//	}
-//    for _, v := range []string{"A", "B", "C"}{
-//        matcher.AddRole(v)
-//    }
-//	cut.AssignConstraints(assertion)
-//	fmt.Println(cut)
+    assertion := map[string]string{
+       "role":       "R",
+       "modal":      "MUST",
+       "field_name": "foo",
+       "exclude":    "an A, a B, or a C",
+    }
+    rc := NewRoleConstraints()
+    rf := NewRoleFinder()
+    matcher := NewMatcher("x")
+    af := NewAllowedFields()
+
+    cut := Assigner{
+        constraints:   rc,
+        roles:         rf,
+        matcher:       matcher,
+        allowedFields: af,
+    }
+    for _, v := range []string{"A", "B", "C"}{
+        matcher.AddRole(v)
+    }
+    cut.AssignConstraints(assertion)
+    retrieved := rc.Get("R")
+    log.Printf("%+v", retrieved)
+    //retrieved := cut.constraints.Constraints
+    fmt.Println(fmt.Printf("%+v",cut.constraints))
+
 }
 
 func TestNonZeroLessThanConstraint(t *testing.T) {

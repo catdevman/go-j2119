@@ -1,8 +1,13 @@
+// AllowFields completed
 package j2119
 
 type AllowedFields struct {
 	allowed map[string][]string
 	any     []string
+}
+
+func NewAllowedFields() AllowedFields{
+    return AllowedFields{}
 }
 
 func (af *AllowedFields) SetAllowed(role, child string) {
@@ -24,6 +29,17 @@ func (af *AllowedFields) Allowed(roles []string, child string) bool {
 		}
 	}
 	return false
+}
+
+func (af *AllowedFields) Any(roles []string) bool{
+    for _, role := range roles {
+        for _, a := range af.any{
+            if role == a {
+                return true
+            }
+        }
+    }
+    return false
 }
 
 func contains(s []string, e string) bool {

@@ -1,3 +1,4 @@
+// Oxford - all functionality completed
 package j2119
 
 import (
@@ -6,7 +7,7 @@ import (
 	"strings"
 )
 
-type Options struct {
+type OxfordOptions struct {
 	UseArticle  bool
 	CaptureName string
 	Connector   string
@@ -16,7 +17,7 @@ type Oxford struct{}
 
 const BASIC = "(?P<CAPTURE>X((((,\\s+X)+,)?)?\\s+or\\s+X)?)"
 
-func (o *Oxford) Re(particle string, opts Options) string {
+func (o *Oxford) Re(particle string, opts OxfordOptions) string {
 	basic := strings.Split(BASIC, "X")
 	hasCapture := basic[0]
 	inter := basic[1]
@@ -54,15 +55,15 @@ func (o *Oxford) BreakStringList(list string) []string {
 	return pieces
 }
 
-func (o *Oxford) BreakRoleList(matcher string, list string) []string {
+func (o *Oxford) BreakRoleList(matcher Matcher, list string) []string {
 	pieces := []string{}
-	re := regexp.MustCompile(fmt.Sprintf(`^an?\s+(%s)(,\s+)?`, matcher))
+	re := regexp.MustCompile(fmt.Sprintf(`^an?\s+(%s)(,\s+)?`, matcher.RoleMatcher))
 	for re.MatchString(list) {
 		submatches := re.FindStringSubmatch(list)
 		pieces = append(pieces, submatches[1])
 		list = strings.TrimPrefix(list, submatches[0])
 	}
-	if re := regexp.MustCompile(fmt.Sprintf(`^\s*(and|or)\s+an?\s+(%s)`, matcher)); re.MatchString(list) {
+	if re := regexp.MustCompile(fmt.Sprintf(`^\s*(and|or)\s+an?\s+(%s)`, matcher.RoleMatcher)); re.MatchString(list) {
 		submatches := re.FindStringSubmatch(list)
 		pieces = append(pieces, submatches[2])
 	}

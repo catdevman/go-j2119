@@ -1,3 +1,4 @@
+// matcher is complete
 package j2119
 
 import (
@@ -24,26 +25,28 @@ type Matcher struct {
 	constraintMatch *regexp.Regexp
 	onlyOneStart    *regexp.Regexp
 	onlyOneMatch    *regexp.Regexp
-	roleMatcher     string
+	RoleMatcher     string
 	typeRegex       string
 	strs            string
 	predicate       string
 	roles           []string
 }
 
-func (m *Matcher) New(root string) {
+func NewMatcher(root string) Matcher{
+    m := Matcher{}
 	m.makeTypeRegex()
 	m.constants()
 	m.roles = []string{}
 	m.AddRole(root)
 	m.reconstruct()
+    return m
 }
 
 func (m *Matcher) constants() {
 	if !m.initialized {
 		m.initialized = true
-		opts := Options{CaptureName: "strings"}
-		ox := Oxford{}
+		opts := OxfordOptions{CaptureName: "strings"}
+        ox := Oxford{}
 		m.strs = ox.Re(S, opts)
 		enum := fmt.Sprintf(`one\s+of\s+%s`, m.strs)
 		relation := fmt.Sprintf(`((?P<relation>%s)\s+)`, strings.Join([]string{
@@ -63,19 +66,19 @@ func (m *Matcher) reconstruct() {
 	m.makeTypeRegex()
 	ox := Oxford{}
 	excludedRoles := `not\s+` + ox.Re(
-		m.roleMatcher,
-		Options{
+		m.RoleMatcher,
+		OxfordOptions{
 			CaptureName: "excluded",
 			UseArticle:  true,
 		}) + `\s+`
 	conditional := `which\s+is\s+` + excludedRoles
-	cStart := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+(%s)?%s\s+have\s+an?\s+`, m.roleMatcher, conditional, MUST)
-	fieldList := `one\s+of\s+` + ox.Re(`"[^"]+"`, Options{
+	cStart := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+(%s)?%s\s+have\s+an?\s+`, m.RoleMatcher, conditional, MUST)
+	fieldList := `one\s+of\s+` + ox.Re(`"[^"]+"`, OxfordOptions{
 		CaptureName: "field_list",
 	})
 	cMatch := fmt.Sprintf(`%s((?P<type>%s)\s+)?field\s+named\s+(("(?P<field_name>[^"]+)")|(%s))(\s+whose\s+value\s+MUST\s+be\s+%s)?(%s)?\.`, cStart, m.typeRegex, fieldList, m.predicate, CHILD_ROLE)
-	ooStart := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+%s\s+have\s+only\s+`, m.roleMatcher, MUST)
-	ooFieldList := fmt.Sprintf(`one\s+of\s+%s`, ox.Re(`"[^"]+"`, Options{
+	ooStart := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+%s\s+have\s+only\s+`, m.RoleMatcher, MUST)
+	ooFieldList := fmt.Sprintf(`one\s+of\s+%s`, ox.Re(`"[^"]+"`, OxfordOptions{
 		CaptureName: "field_list",
 		Connector:   "and",
 	}))
@@ -84,7 +87,7 @@ func (m *Matcher) reconstruct() {
 
 	valMatch := `whose\s+"(?P<fieldtomatch>[^"]+)"\s+field's\s+value\s+is\s+(?P<valtomatch>("[^"]*")|([^"\s]\S+))\s+`
 	withAMatch := `with\s+an?\s+"(?P<with_a_field>[^"]+)"\s+field\s`
-	rdMatch := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+((?P<val_match_present>%s)|(%s))?is\s+an?\s+"(?P<newrole>[^"]*)"\.\s*$`, m.roleMatcher, valMatch, withAMatch)
+	rdMatch := fmt.Sprintf(`^An?\s+(?P<role>%s)\s+((?P<val_match_present>%s)|(%s))?is\s+an?\s+"(?P<newrole>[^"]*)"\.\s*$`, m.RoleMatcher, valMatch, withAMatch)
 
 	m.roleDefMatch = regexp.MustCompile(rdMatch)
 
@@ -94,7 +97,7 @@ func (m *Matcher) reconstruct() {
 	m.onlyOneStart = regexp.MustCompile(ooStart)
 	m.onlyOneMatch = regexp.MustCompile(ooMatch)
 
-	eoMatch := fmt.Sprintf(`^Each\s+of\s%s\s+(?P<trailer>.*)$`, ox.Re(m.roleMatcher, Options{
+	eoMatch := fmt.Sprintf(`^Each\s+of\s%s\s+(?P<trailer>.*)$`, ox.Re(m.RoleMatcher, OxfordOptions{
 		CaptureName: "each_of",
 		UseArticle:  true,
 		Connector:   "and",
@@ -150,7 +153,7 @@ func (m *Matcher) makeTypeRegex() {
 
 func (m *Matcher) AddRole(role string) {
 	m.roles = append(m.roles, role)
-	m.roleMatcher = strings.Join(m.roles, "|")
+	m.RoleMatcher = strings.Join(m.roles, "|")
 	m.reconstruct()
 }
 

@@ -1,3 +1,4 @@
+// All tests completed
 package j2119
 
 import (
@@ -6,7 +7,7 @@ import (
 )
 
 func TestReturnsTrueWhenAppropriate(t *testing.T) {
-	cut := AllowedFields{}
+	cut := NewAllowedFields()
 	cut.SetAllowed("foo", "bar")
 	fmt.Println("test")
 	if !cut.Allowed([]string{"foo"}, "bar") {
@@ -19,8 +20,7 @@ func TestReturnsTrueWhenAppropriate(t *testing.T) {
 }
 
 func TestReturnsFalseWhenAppropriate(t *testing.T) {
-	cut := AllowedFields{}
-	// fmt.Println(fmt.Sprintf("%+v", cut))
+	cut := NewAllowedFields()
 	cut.SetAllowed("foo", "bar")
 
 	if cut.Allowed([]string{"foo"}, "baz") {
@@ -33,7 +33,7 @@ func TestReturnsFalseWhenAppropriate(t *testing.T) {
 }
 
 func TestWorksWithStrangeQueries(t *testing.T) {
-	cut := AllowedFields{}
+	cut := NewAllowedFields()
 	cut.SetAllowed("foo", "bar")
 
 	if cut.Allowed([]string{"boo"}, "baz") {
