@@ -1,0 +1,8 @@
+# go-j2119
+
+Rewrite of https://github.com/awslabs/j2119 to go so
+https://github.com/awslabs/statelint can just be a go binary
+instead of relying on Ruby
+
+Also has given me a change to remind myself of a little Ruby for anyone that
+might ask me to use it.
