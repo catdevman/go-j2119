@@ -1,7 +1,9 @@
 package j2119
 
 import (
-	"os"
+	"io"
+    "io/ioutil"
+    "fmt"
 )
 
 type Validator struct {
@@ -10,11 +12,12 @@ type Validator struct {
 	parser Parser
 }
 
-func (v *Validator) Init(schema *os.File) {
-	defer schema.Close()
-	v.parser.New(schema)
+func (v *Validator) Init(reader io.Reader) {
+    data, err := ioutil.ReadAll(reader)
+    if err != nil {}
+    fmt.Println(data)
 }
 
-func (v *Validator) Validate(source *os.File) []string {
+func (v *Validator) Validate(reader io.Reader) []string {
 	return []string{}
 }

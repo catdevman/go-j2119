@@ -32,7 +32,6 @@ func TestShouldAttachAConditionToAConstraint(t *testing.T) {
     log.Printf("%+v", retrieved)
     //retrieved := cut.constraints.Constraints
     fmt.Println(fmt.Printf("%+v",cut.constraints))
-
 }
 
 func TestNonZeroLessThanConstraint(t *testing.T) {
