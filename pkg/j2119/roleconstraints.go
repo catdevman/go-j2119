@@ -4,8 +4,8 @@ type RoleConstraints struct {
 	Constraints map[string][]Constraint
 }
 
-func NewRoleConstraints() RoleConstraints{
-    return RoleConstraints{}
+func NewRoleConstraints() RoleConstraints {
+	return RoleConstraints{}
 }
 
 func (r *RoleConstraints) Add(role string, constraint Constraint) {

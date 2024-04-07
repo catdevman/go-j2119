@@ -29,8 +29,8 @@ func (p *Parser) New(f *os.File) {
 			} else {
 				p.root = ROOT.FindString(line)
 				p.matcher = NewMatcher(p.root)
-                p.constraints = NewRoleConstraints()
-                p.assigner = NewAssigner(p.constraints, p.finder, p.matcher, p.allowedFields)
+				p.constraints = NewRoleConstraints()
+				p.assigner = NewAssigner(p.constraints, p.finder, p.matcher, p.allowedFields)
 				p.haveRoot = true
 			}
 		} else {

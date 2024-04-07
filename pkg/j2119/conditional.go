@@ -9,10 +9,10 @@ type RoleNotPresentCondition struct {
 	ExcludedRoles []string
 }
 
-func NewRoleNotPresentCondition(roles []string) RoleNotPresentCondition{
-    rpc := RoleNotPresentCondition{}
-    rpc.ExcludedRoles = append(rpc.ExcludedRoles, roles...)
-    return rpc
+func NewRoleNotPresentCondition(roles []string) RoleNotPresentCondition {
+	rpc := RoleNotPresentCondition{}
+	rpc.ExcludedRoles = append(rpc.ExcludedRoles, roles...)
+	return rpc
 }
 
 func (r *RoleNotPresentCondition) String() string {

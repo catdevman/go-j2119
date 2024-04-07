@@ -32,21 +32,21 @@ type Matcher struct {
 	roles           []string
 }
 
-func NewMatcher(root string) Matcher{
-    m := Matcher{}
+func NewMatcher(root string) Matcher {
+	m := Matcher{}
 	m.makeTypeRegex()
 	m.constants()
 	m.roles = []string{}
 	m.AddRole(root)
 	m.reconstruct()
-    return m
+	return m
 }
 
 func (m *Matcher) constants() {
 	if !m.initialized {
 		m.initialized = true
 		opts := OxfordOptions{CaptureName: "strings"}
-        ox := Oxford{}
+		ox := Oxford{}
 		m.strs = ox.Re(S, opts)
 		enum := fmt.Sprintf(`one\s+of\s+%s`, m.strs)
 		relation := fmt.Sprintf(`((?P<relation>%s)\s+)`, strings.Join([]string{
@@ -171,21 +171,19 @@ func (m *Matcher) IsRoleDefLine(line string) bool {
 }
 
 func (m *Matcher) TokenizeStrings(s string) []string {
-    	r := regexp.MustCompile(`"(.*?)"`)
+	r := regexp.MustCompile(`"(.*?)"`)
 	matches := r.FindAllStringSubmatch(s, -1)
-	
+
 	var results []string
 	for _, match := range matches {
 		results = append(results, match[1])
 	}
-	
+
 	return results
 }
 
-
-
 func (m *Matcher) BuildConstraint(line string) map[string]string {
-    return Build(m.constraintMatch, line)
+	return Build(m.constraintMatch, line)
 }
 
 func Build(re *regexp.Regexp, line string) map[string]string {

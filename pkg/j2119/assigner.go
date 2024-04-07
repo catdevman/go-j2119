@@ -10,12 +10,12 @@ type Assigner struct {
 }
 
 func NewAssigner(rc RoleConstraints, rf RoleFinder, m Matcher, af AllowedFields) Assigner {
-    a := Assigner{}
+	a := Assigner{}
 	a.constraints = rc
 	a.roles = rf
 	a.matcher = m
 	a.allowedFields = af
-    return a
+	return a
 }
 
 func (a *Assigner) AssignRoles(assertion map[string]string) {
@@ -56,7 +56,7 @@ func (a *Assigner) AssignConstraints(assertion map[string]string) {
 	//
 	//
 	// var condition any
- //    var c RoleNotPresentCondition
+	//    var c RoleNotPresentCondition
 	// if ex, ok := assertion["excluded"]; ok {
 	// 	ox := Oxford{}
 	// 	excluded_roles := ox.BreakRoleList(a.matcher.roleMatcher, ex)
@@ -65,28 +65,28 @@ func (a *Assigner) AssignConstraints(assertion map[string]string) {
 	// 	c.New(excluded_roles)
 	// }
 	//
- //    if relation != "" {
- //        a.AddRelationConstraint(role, field_name, relation, target, c)
- //    }
+	//    if relation != "" {
+	//        a.AddRelationConstraint(role, field_name, relation, target, c)
+	//    }
 	//
- //    if strings != "" {
- //        ox := Oxford{}
- //        fields := ox.BreakStringList(strings)
- //        a.AddConstraint()
- //    }
+	//    if strings != "" {
+	//        ox := Oxford{}
+	//        fields := ox.BreakStringList(strings)
+	//        a.AddConstraint()
+	//    }
 
 }
 
-func (a *Assigner) AddRelationConstraint(role, field, relation, target string, condition RoleNotPresentCondition){
-    t, err := Deduce(target)
-    fmt.Println(t, err)
+func (a *Assigner) AddRelationConstraint(role, field, relation, target string, condition RoleNotPresentCondition) {
+	t, err := Deduce(target)
+	fmt.Println(t, err)
 }
 
-func (a *Assigner) AddConstraint(role string, constraint Constraint, condition RoleNotPresentCondition){
-    // if condition != nil {
-    //     constraint.AddCondition(condition)
-    // }
-    //
-    // a.constraints.Add(constraint)
-    
+func (a *Assigner) AddConstraint(role string, constraint Constraint, condition RoleNotPresentCondition) {
+	// if condition != nil {
+	//     constraint.AddCondition(condition)
+	// }
+	//
+	// a.constraints.Add(constraint)
+
 }

@@ -1,7 +1,7 @@
 package j2119
 
 import (
-    "fmt"
+	"fmt"
 )
 
 type Condition interface {

@@ -1,9 +1,9 @@
 package j2119
 
 import (
+	"fmt"
 	"io"
-    "io/ioutil"
-    "fmt"
+	"io/ioutil"
 )
 
 type Validator struct {
@@ -13,9 +13,10 @@ type Validator struct {
 }
 
 func (v *Validator) Init(reader io.Reader) {
-    data, err := ioutil.ReadAll(reader)
-    if err != nil {}
-    fmt.Println(data)
+	data, err := ioutil.ReadAll(reader)
+	if err != nil {
+	}
+	fmt.Println(data)
 }
 
 func (v *Validator) Validate(reader io.Reader) []string {
